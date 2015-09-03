@@ -3,6 +3,7 @@
 
 import sys
 import re
+import Cue
 
 class CueReader(object):
 
@@ -10,12 +11,7 @@ class CueReader(object):
         self._init_data()
 
     def _init_data(self):
-        self._data = {
-                'rem': {},
-                'title': '',
-                'file': ['', ''],
-                'tracks': []
-                }
+        self._data = Cue.Cue()
 
     def parse(self, filename):
         self._init_data()
@@ -30,60 +26,39 @@ class CueReader(object):
                     self._processChunk(line.strip())
 
     def _processChunk(self, line):
-        is_new_chunk = line.startswith('TRACK')
-        if is_new_chunk:
-            self._saveTrackInfo('number', line.split()[1])
+        track_info = line.split()
+        if line.startswith('TRACK'):
+            self._data.newTrack(int(track_info[1]) - 1)
+        elif track_info[0] == 'INDEX':
+            time = ' '.join(track_info[2:])
+            if int(track_info[1]) == 0:
+                self._data.addTrackLastEndTime(time)
+            else:
+                self._data.addTrackStartTime(time)
         else:
-            track_info = line.split()
-            self._saveTrackInfo(track_info[0], ' '.join(track_info[1:]))
+            self._data.addTrack(track_info[0], ' '.join(track_info[1:]))
 
     def _processLine(self, line):
         if line.startswith('REM'):
             rem_info = line.split()[1:]
-            self._saveREMInfo(rem_info[0], ' '.join(rem_info[1:]))
+            self._data.addREM(rem_info[0], ' '.join(rem_info[1:]))
         elif line.startswith('TITLE'):
-            title_info = ' '.join(line.split()[1:])
-            self._saveTitleInfo(title_info)
+            self._data.setTitle(' '.join(line.split()[1:]))
         elif line.startswith('FILE'):
             file_info = ' '.join(line.split()[1:])
             match = re.compile(r'"(.*)\"\s*([a-zA-Z]*)')
             rlt = match.match(file_info)
             if rlt:
-                self._saveFileInfo(*rlt.groups())
-
-    def _saveTrackInfo(self, name, value):
-        if name == 'number':
-            self._data['tracks'].insert(int(value) - 1, {})
-        elif name == 'INDEX':
-            num, time = value.split()
-            index_name = int(num) == 0 and 'last_end_time' or 'start_time'
-            self._data['tracks'][-1][index_name] = time
-        else:
-            self._data['tracks'][-1][name.lower()] = value
-
-    def _saveREMInfo(self, name, value):
-        self._data['rem'][name] = value
-
-    def _saveTitleInfo(self, title):
-        self._data['title'] = title
-
-    def _saveFileInfo(self, filename, filetype):
-        self._data['file'] = [filename, filetype]
+                self._data.setFile(*rlt.groups())
 
     def getTrack(self, index):
-        if len(self) > index:
-            return self._data['tracks'][index]
-        raise IndexError("out of index range")
+        return self._data.getTrack(index)
 
     def __getitem__(self, index):
-        if isinstance(index, slice):
-            indices = index.indices(len(self))
-            return [self.getTrack(i) for i in range(*indices)]
-        else:
-            return self.getTrack(index)
+        return self._data.__getitem__(index)
 
     def __len__(self):
-        return len(self._data['tracks'])
+        return len(self._data)
 
     def __repr__(self):
         return repr(self._data)
