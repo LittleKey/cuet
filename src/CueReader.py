@@ -70,20 +70,20 @@ class CueReader(object):
     def _saveFileInfo(self, filename, filetype):
         self._data['file'] = [filename, filetype]
 
-    def get(self, index, default=None):
+    def getTrack(self, index):
         if len(self) > index:
-            return self._data[index]
-        return default
+            return self._data['tracks'][index]
+        raise IndexError("out of index range")
 
     def __getitem__(self, index):
         if isinstance(index, slice):
             indices = index.indices(len(self))
-            return [self.get(i) for i in range(*indices)]
+            return [self.getTrack(i) for i in range(*indices)]
         else:
-            return self.get(index)
+            return self.getTrack(index)
 
     def __len__(self):
-        return len(self._data)
+        return len(self._data['tracks'])
 
     def __repr__(self):
         return repr(self._data)
