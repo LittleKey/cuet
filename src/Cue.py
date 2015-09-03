@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import re
-
 
 class Cue(object):
 
@@ -39,6 +37,11 @@ class Cue(object):
         if len(self) > index:
             return self._data['tracks'][index]
         raise IndexError("out of index range")
+
+    def getFilename(self):
+        if len(self._data['file']) == 2:
+            return self._data['file'][0]
+        return ''
 
     def __getitem__(self, index):
         if isinstance(index, slice):

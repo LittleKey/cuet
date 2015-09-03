@@ -2,18 +2,23 @@
 # encoding: utf-8
 
 import sys
+import os
 import re
 import Cue
 
 class CueReader(object):
 
     def __init__(self):
+        self._path_dir = '.'
         self._init_data()
 
     def _init_data(self):
         self._data = Cue.Cue()
 
     def parse(self, filename):
+        if not (os.path.exists(filename) and os.path.isfile(filename)):
+            return
+        self._path_dir = os.path.abspath(os.path.dirname(filename))
         self._init_data()
         with open(filename) as f:
             # remove utf-8 bom header
@@ -35,6 +40,9 @@ class CueReader(object):
                 self._data.addTrackLastEndTime(time)
             else:
                 self._data.addTrackStartTime(time)
+        elif track_info[0] == 'TITLE':
+            title_match = re.compile(r'^"?(.*?)"?$')
+            self._data.addTrack(track_info[0], title_match.match(' '.join(track_info[1:])).groups()[0])
         else:
             self._data.addTrack(track_info[0], ' '.join(track_info[1:]))
 
@@ -46,13 +54,16 @@ class CueReader(object):
             self._data.setTitle(' '.join(line.split()[1:]))
         elif line.startswith('FILE'):
             file_info = ' '.join(line.split()[1:])
-            match = re.compile(r'"(.*)\"\s*([a-zA-Z]*)')
+            match = re.compile(r'^"?(.*?)"?\s*([a-zA-Z]*)$')
             rlt = match.match(file_info)
             if rlt:
                 self._data.setFile(*rlt.groups())
 
     def getTrack(self, index):
         return self._data.getTrack(index)
+
+    def getFilename(self):
+        return os.path.join(self._path_dir, self._data.getFilename())
 
     def __getitem__(self, index):
         return self._data.__getitem__(index)
