@@ -30,12 +30,6 @@ class Cuet(object):
 
     def cutMusicByFFmpeg(self, filename, title, start_time, end_time, audio_type='flac'):
         extname = os.path.splitext(filename)[-1]
-        print('ffmpeg -i {filename} -vn -acodec copy -ss {start_time} -f {audio_type} -y "{title}{extname}"'.format(
-                filename=filename,
-                start_time=start_time,
-                audio_type=audio_type,
-                title=title,
-                extname=extname))
         if end_time != '00:00.00':
             os.system('ffmpeg -i {filename} -vn -acodec copy -ss {start_time} -to {end_time} -f {audio_type} -y "{title}{extname}"'.format(
                 filename=filename,
