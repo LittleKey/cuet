@@ -5,6 +5,7 @@ import os
 import sys
 import CueCuter
 import CueReader
+import AFormatDetermine
 
 
 class Cuet(object):
@@ -28,21 +29,31 @@ class Cuet(object):
 
         return None
 
-    def cutMusicByFFmpeg(self, filename, title, start_time, end_time, audio_type='flac'):
+    def cutMusicByFFmpeg(self, filename, title, start_time, end_time):
+        # TODO : 集成ffmpeg
         extname = os.path.splitext(filename)[-1]
+        afdet = AFormatDetermine.AFormatDetermine()
+        coder = 'copy'
+        if not afdet.canCopy(extname):
+            extname = '.wav'
+            coder = afdet.determineEncode(extname)
+        output_format = afdet.extname2format(extname)
+
         if end_time != '00:00.00':
-            os.system('ffmpeg -i "{filename}" -vn -acodec flac -ss {start_time} -to {end_time} -f {audio_type} -y "{title}{extname}"'.format(
+            os.system('ffmpeg -i "{filename}" -vn -acodec {coder} -ss {start_time} -to {end_time} -f {output_format} "{title}{extname}"'.format(
                 filename=filename,
+                coder=coder,
                 start_time=start_time,
                 end_time=end_time,
-                audio_type=audio_type,
+                output_format=output_format,
                 title=title,
                 extname=extname))
         else:
-            os.system('ffmpeg -i "{filename}" -vn -acodec flac -ss {start_time} -f {audio_type} -y "{title}{extname}"'.format(
+            os.system('ffmpeg -i "{filename}" -vn -acodec {coder} -ss {start_time} -f {output_format} "{title}{extname}"'.format(
                 filename=filename,
+                coder=coder,
                 start_time=start_time,
-                audio_type=audio_type,
+                output_format=output_format,
                 title=title,
                 extname=extname))
 
