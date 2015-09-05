@@ -5,6 +5,7 @@ import sys
 import os
 import re
 import Cue
+import CharDetermine
 
 class CueReader(object):
 
@@ -24,11 +25,12 @@ class CueReader(object):
             # remove utf-8 bom header
             if f.read(3) != '\xef\xbb\xbf':
                 f.seek(0)
+            chardet = CharDetermine.CharDetermine(['utf8', 'gbk'])
             for line in f:
                 if not line.startswith(' '):
-                    self._processLine(line.strip())
+                    self._processLine(chardet.processChar(line).strip())
                 else:
-                    self._processChunk(line.strip())
+                    self._processChunk(chardet.processChar(line).strip())
 
     def _processChunk(self, line):
         track_info = line.split()
