@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import Track
+
 
 class Cue(object):
 
@@ -13,16 +15,16 @@ class Cue(object):
                 }
 
     def newTrack(self, index):
-        self._data['tracks'].insert(index, {})
+        self._data['tracks'].insert(index, Track.Track(index))
 
     def addTrackLastEndTime(self, time):
-        self._data['tracks'][-1]['last_end_time'] = time
+        self._data['tracks'][-1].addLastEndTime(time)
 
     def addTrackStartTime(self, time):
-        self._data['tracks'][-1]['start_time'] = time
+        self._data['tracks'][-1].addStartTime(time)
 
-    def addTrack(self, name, value):
-        self._data['tracks'][-1][name.lower()] = value
+    def addTrackInfo(self, name, value):
+        self._data['tracks'][-1].addInfo(name, value)
 
     def addREM(self, name, value):
         self._data['rem'][name.lower()] = value

@@ -15,10 +15,10 @@ class CueCuter(object):
         end_time = None
         if tracks:
             cur_track = tracks[0]
-            start_time = cur_track.get('start_time')
+            start_time = cur_track.start_time
             if (len(tracks) == 2):
                 next_track = tracks[1]
-                end_time = next_track.get('last_end_time')
+                end_time = next_track.last_end_time
 
         if not start_time:
             start_time = "00:00:00"
@@ -30,7 +30,7 @@ class CueCuter(object):
     def getTitle(self, index):
         track = self._reader.getTrack(index)
         if track:
-            title = track.get('title')
+            title = track.title
         if not title:
             title = 'no title'
 

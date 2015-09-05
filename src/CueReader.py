@@ -42,9 +42,9 @@ class CueReader(object):
                 self._data.addTrackStartTime(time)
         elif track_info[0] == 'TITLE':
             title_match = re.compile(r'^"?(.*?)"?$')
-            self._data.addTrack(track_info[0], title_match.match(' '.join(track_info[1:])).groups()[0])
+            self._data.addTrackInfo(track_info[0], title_match.match(' '.join(track_info[1:])).groups()[0])
         else:
-            self._data.addTrack(track_info[0], ' '.join(track_info[1:]))
+            self._data.addTrackInfo(track_info[0], ' '.join(track_info[1:]))
 
     def _processLine(self, line):
         if line.startswith('REM'):
