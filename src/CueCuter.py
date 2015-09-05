@@ -18,7 +18,10 @@ class CueCuter(object):
             start_time = cur_track.start_time
             if (len(tracks) == 2):
                 next_track = tracks[1]
-                end_time = next_track.last_end_time
+                try:
+                    end_time = next_track.last_end_time
+                except AttributeError:
+                    end_time = next_track.start_time
 
         if not start_time:
             start_time = "00:00:00"
