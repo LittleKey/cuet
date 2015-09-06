@@ -3,7 +3,6 @@
 
 import sys
 import CueReader
-import Time
 
 class CueCuter(object):
 
@@ -12,8 +11,8 @@ class CueCuter(object):
 
     def getTimeZone(self, index):
         tracks = self._reader[index:index + 2]
-        start_time = Time.Time()
-        end_time = Time.Time()
+        start_time = None
+        end_time = None
         if tracks:
             cur_track = tracks[0]
             start_time = cur_track.start_time

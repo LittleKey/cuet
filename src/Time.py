@@ -25,7 +25,7 @@ class Time(object):
     def __eq__(self, other):
         if isinstance(other, Time):
             return self.toMicroSec() == self.toMicroSec()
-        elif isinstance(other, int):
+        elif isinstance(other, (int, float)):
             return self.toMicroSec() == other
         else:
             return False
@@ -34,7 +34,12 @@ class Time(object):
         return not self.__eq__(other)
 
     def __cmp__(self, other):
-        return self.toMicroSec() - other.toMicroSec()
+        if isinstance(other, Time):
+            return self.toMicroSec() - other.toMicroSec()
+        elif isinstance(other, (int, float)):
+            return self.toMicroSec() - other
+        else:
+            raise ValueError("no support compare with '{}'".format(other))
 
     def __repr__(self):
         return '%02d:%02d:%02d:%03d' % (self._hour, self._minute, self._sec, self._micro)
