@@ -5,13 +5,11 @@ CUET
 
 ### USAGE
 
-裁剪音频文件需要ffmpeg的支持
+`./main cue_filename.cue`
 
-有可能需要手动去设定音频的格式（目前默认只写了flac
+裁剪音频文件依赖[PyAV](https://github.com/mikeboers/PyAV)
 
-
-如果没有ffmpeg，也能获取cue信息 (比如一首歌的时间区间, title等信息
-并且可以使用其他音频编码软件
+如果没有PyAV也能获取cue信息
 
 *参考`Cuet.py`*
 
