@@ -14,7 +14,7 @@ class AudioProcessor(object):
         self._overwrite = False
 
     def open(self, filename):
-        if AudioProcessor._file_check(filename):
+        if os.path.isfile(filename):
             self._media_container = av.open(filename)
 
     def getFormat(self):
@@ -36,7 +36,7 @@ class AudioProcessor(object):
         self._overwrite = True
 
     def process(self, out_filename):
-        if not self._overwrite and AudioProcessor._file_check(out_filename):
+        if not self._overwrite and os.path.exists(out_filename):
             return
         output_container = av.open(out_filename, 'w')
         input_audio_stream = next(s for s in self._media_container.streams if s.type == b'audio')
@@ -55,9 +55,4 @@ class AudioProcessor(object):
                 output_container.mux(output_audio_stream.encode(frame))
         output_container.close()
 
-    @staticmethod
-    def _file_check(filename):
-        if os.path.exists(filename) and os.path.isfile(filename):
-            return True
-        return False
 
