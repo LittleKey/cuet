@@ -20,7 +20,5 @@ class CharDetermine(object):
             except UnicodeDecodeError:
                 self._nextEncode()
                 continue
-            except IndexError:
-                raise UnicodeDecodeError("'{}' can't decode '{}'".format(self, chars))
 
 

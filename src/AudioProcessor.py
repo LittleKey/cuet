@@ -43,13 +43,14 @@ class AudioProcessor(object):
 
         output_audio_stream = output_container.add_stream(self._codec, input_audio_stream.rate)
 
-        start_time = self._start_time.getFFmpegTime()
-        end_time = self._end_time.getFFmpegTime()
+        start_time = self._start_time and self._start_time.getFFmpegTime()
+        end_time = self._end_time and self._end_time.getFFmpegTime()
+        print("processing '{}'".format(out_filename))
         for packet in self._media_container.demux(input_audio_stream):
             for frame in packet.decode():
-                if self._start_time and frame.time < start_time:
+                if start_time and frame.time < start_time:
                     continue
-                if self._end_time and end_time < frame.time:
+                if end_time and end_time < frame.time:
                     break
                 output_container.mux(output_audio_stream.encode(frame))
         output_container.close()
