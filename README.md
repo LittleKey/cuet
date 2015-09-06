@@ -14,3 +14,14 @@ CUET
 并且可以使用其他音频编码软件
 
 *参考`Cuet.py`*
+
+### REQUIREMENTS
+
+- pyav
+    ```
+    on MAC
+
+    brew install ffmpeg pkg-config
+    pip install av
+    ```
+
