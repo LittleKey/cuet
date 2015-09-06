@@ -22,8 +22,7 @@ class Cuet(object):
         if len(self._reader) > index and index >= 0:
             filename = self._reader.getFilename()
             title = self._cuter.getTitle(index)
-            start_time, end_time = map(lambda t: CueCuter.ConvertTimeForFFmpeg(t),
-                    self._cuter.getTimeZone(index))
+            start_time, end_time = self._cuter.getTimeZone(index)
 
             return (filename, title, start_time, end_time)
 
@@ -32,19 +31,17 @@ class Cuet(object):
     def cutMusicByFFmpeg(self, filename, title, start_time, end_time):
         # TODO : 集成ffmpeg
         extname = os.path.splitext(filename)[-1]
-        afdet = AFormatDetermine.AFormatDetermine()
-        coder = 'copy'
-        if not afdet.canCopy(extname):
-            extname = '.wav'
-            coder = afdet.determineEncode(extname)
-        output_format = afdet.extname2format(extname)
+        afdet = AFormatDetermine.AFormatDetermine(filename)
+        extname = afdet.getExtname()
+        output_format = afdet.getFormat()
+        coder = afdet.determineEncode()
 
-        if end_time != '00:00.00':
+        if end_time != 0:
             os.system('ffmpeg -i "{filename}" -vn -acodec {coder} -ss {start_time} -to {end_time} -f {output_format} "{title}{extname}"'.format(
                 filename=filename,
                 coder=coder,
-                start_time=start_time,
-                end_time=end_time,
+                start_time=start_time.getFFmpegTime(),
+                end_time=end_time.getFFmpegTime(),
                 output_format=output_format,
                 title=title,
                 extname=extname))
@@ -52,7 +49,7 @@ class Cuet(object):
             os.system('ffmpeg -i "{filename}" -vn -acodec {coder} -ss {start_time} -f {output_format} "{title}{extname}"'.format(
                 filename=filename,
                 coder=coder,
-                start_time=start_time,
+                start_time=start_time.getFFmpegTime(),
                 output_format=output_format,
                 title=title,
                 extname=extname))

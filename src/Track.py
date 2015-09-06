@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import Time
+
 
 class Track(object):
 
@@ -9,10 +11,14 @@ class Track(object):
         self._data = {}
 
     def addLastEndTime(self, time):
-        self._data['last_end_time'] = time
+        t = Time.Time()
+        t.parse(time)
+        self._data['last_end_time'] = t
 
     def addStartTime(self, time):
-        self._data['start_time'] = time
+        t = Time.Time()
+        t.parse(time)
+        self._data['start_time'] = t
 
     def addInfo(self, name, value):
         self._data[name.lower()] = value

@@ -3,6 +3,7 @@
 
 import sys
 import CueReader
+import Time
 
 class CueCuter(object):
 
@@ -11,8 +12,8 @@ class CueCuter(object):
 
     def getTimeZone(self, index):
         tracks = self._reader[index:index + 2]
-        start_time = None
-        end_time = None
+        start_time = Time.Time()
+        end_time = Time.Time()
         if tracks:
             cur_track = tracks[0]
             start_time = cur_track.start_time
@@ -22,11 +23,6 @@ class CueCuter(object):
                     end_time = next_track.last_end_time
                 except AttributeError:
                     end_time = next_track.start_time
-
-        if not start_time:
-            start_time = "00:00:00"
-        if not end_time:
-            end_time = "00:00:00"
 
         return (start_time, end_time)
 
@@ -39,18 +35,11 @@ class CueCuter(object):
 
         return title
 
-
-def ConvertTimeForFFmpeg(time):
-    minute, sec, micro = map(lambda t: int (t), time.split(':'))
-    micro = micro * 100 / 60
-
-    return "%02d:%02d.%02d" % (minute, sec, micro)
-
 if __name__ == '__main__':
     reader = CueReader.CueReader()
     reader.parse(sys.argv[1])
     cuter = CueCuter(reader)
     print(cuter.getTimeZone(1))
-    print(ConvertTimeForFFmpeg(cuter.getTimeZone(0)[1]))
+    print(cuter.getTimeZone(0)[1])
     print(cuter.getTitle(1))
 

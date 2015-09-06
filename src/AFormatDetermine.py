@@ -1,24 +1,39 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import os
+import AudioProcessor
+
+
 class AFormatDetermine(object):
 
     _mapFormat2Encode = {
             'flac': 'flac',
             'wav': 'pcm_s16le'}
 
-    _mapExtname2Format = {
-            '.flac': 'flac',
-            '.wav': 'wav'}
+    _mapFormat2Extname = {
+            'flac': '.flac',
+            'wav': '.wav'}
 
-    @classmethod
-    def canCopy(cls, extname):
-        return cls.extname2format(extname) != None
+    def __init__(self, filename, defalt_format='wav'):
+        self._ap = AudioProcessor.AudioProcessor()
+        self._ap.open(filename)
+        self._default_format = defalt_format
 
-    @classmethod
-    def determineEncode(cls, extname):
-        return cls._mapFormat2Encode.get(cls.extname2format(extname))
+    def canCopy(self):
+        return self._ap.getFormat() in AFormatDetermine._mapFormat2Encode
 
-    @classmethod
-    def extname2format(cls, extname):
-        return cls._mapExtname2Format.get(extname)
+    def determineEncode(self):
+        if self.canCopy():
+            return 'copy'
+        return self._mapFormat2Encode.get(self.getFormat())
+
+    def getFormat(self):
+        return AFormatDetermine._mapFormat2Encode.get(self._ap.getFormat(),
+                self._default_format)
+
+    def getExtname(self):
+        if self.canCopy():
+            return os.path.splitext(self._ap.getName())[-1]
+        return AFormatDetermine._mapFormat2Extname.get(self._default_format)
+
