@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import av
 import os
+try:
+    import threading as _threading
+except ImportError:
+    import dummy_threading as _threading
+import av
 
 
 class AudioProcessor(object):
@@ -45,14 +49,24 @@ class AudioProcessor(object):
 
         start_time = self._start_time and self._start_time.getFFmpegTime()
         end_time = self._end_time and self._end_time.getFFmpegTime()
-        print("processing '{}'".format(out_filename))
-        for packet in self._media_container.demux(input_audio_stream):
-            for frame in packet.decode():
-                if start_time and frame.time < start_time:
-                    continue
-                if end_time and end_time < frame.time:
-                    break
-                output_container.mux(output_audio_stream.encode(frame))
-        output_container.close()
+        packet_list = self._media_container.demux(input_audio_stream)
+        def task():
+            print("processing '{}'".format(out_filename))
+            for packet in packet_list:
+                for frame in packet.decode():
+                    if start_time and frame.time < start_time:
+                        continue
+                    if end_time and end_time < frame.time:
+                        break
+                    output_container.mux(output_audio_stream.encode(frame))
+            output_container.close()
+            print("processed '{}'".format(out_filename))
+        ThreadFunc(task)
+
+
+def ThreadFunc(func):
+    t = _threading.Thread()
+    t.run = func
+    t.start()
 
 
