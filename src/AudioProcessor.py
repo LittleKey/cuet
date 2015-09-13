@@ -4,6 +4,7 @@
 import os
 import multiprocessing
 import av
+import AFormatDetermine
 
 
 class AudioProcessor(object):
@@ -59,6 +60,21 @@ class AudioProcessor(object):
             output_container.close()
             print("processed '{}'".format(out_filename))
         ProcessFunc(task)
+
+    def processByFFmpeg(self, out_filename):
+        if not self._overwrite and os.path.exists(out_filename):
+            return
+        command = [self._ffmpeg, '-i "{}"'.format(self.getName()), '-vn', '-acodec {}'.format(self._codec)]
+        if self._start_time:
+            command.append('-ss {}'.format(self._start_time.getFFmpegTime()))
+        if self._end_time:
+            command.append('-to {}'.format(self._end_time.getFFmpegTime()))
+        command.append('-f {}'.format(AFormatDetermine.AFormatDetermine(self).getFormat()))
+        if self._overwrite:
+            command.append('-y')
+        command.append('"{}"'.format(out_filename))
+
+        os.system(' '.join(command))
 
 
 def ProcessFunc(task):

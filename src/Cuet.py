@@ -39,7 +39,12 @@ class Cuet(object):
         ap.setStartTime(start_time)
         ap.setEndTime(end_time)
         ap.overwrite()
-        ap.process('{title}{extname}'.format(title=title, extname=extname))
+
+        output_filename = '{title}{extname}'.format(title=title, extname=extname)
+        if ap.getName().endswith('.ape'):
+            ap.processByFFmpeg(output_filename)
+        else:
+            ap.process(output_filename)
 
 if __name__ == '__main__':
     cuet = Cuet()
