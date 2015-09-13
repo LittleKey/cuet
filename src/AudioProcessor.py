@@ -5,6 +5,7 @@ import os
 import multiprocessing
 import av
 import AFormatDetermine
+import Time
 
 
 class AudioProcessor(object):
@@ -20,25 +21,30 @@ class AudioProcessor(object):
             self._media_container = av.open(filename)
 
     def getFormat(self):
-        return self._media_container.format.name
+        if self._media_container:
+            return self._media_container.format.name
 
     def getName(self):
-        return self._media_container.name
+        if self._media_container:
+            return self._media_container.name
 
     def setCodec(self, codec):
-        self._codec = codec
+        if isinstance(codec, (str, unicode)):
+            self._codec = codec
 
     def setStartTime(self, time):
-        self._start_time = time
+        if isinstance(time, (Time.Time, None.__class__)):
+            self._start_time = time
 
     def setEndTime(self, time):
-        self._end_time = time
+        if isinstance(time, (Time.Time, None.__class__)):
+            self._end_time = time
 
     def overwrite(self):
         self._overwrite = True
 
     def process(self, out_filename):
-        if not self._overwrite and os.path.exists(out_filename):
+        if not self._media_container or (not self._overwrite and os.path.exists(out_filename)):
             return
         output_container = av.open(out_filename, 'w')
         input_audio_stream = next(s for s in self._media_container.streams if s.type == b'audio')
@@ -62,7 +68,7 @@ class AudioProcessor(object):
         ProcessFunc(task)
 
     def processByFFmpeg(self, out_filename):
-        if not self._overwrite and os.path.exists(out_filename):
+        if not self._media_container or (not self._overwrite and os.path.exists(out_filename)):
             return
         command = [self._ffmpeg, '-i "{}"'.format(self.getName()), '-vn', '-acodec {}'.format(self._codec)]
         if self._start_time:
