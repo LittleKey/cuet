@@ -2,10 +2,6 @@
 # encoding: utf-8
 
 import os
-try:
-    import threading as _threading
-except ImportError:
-    import dummy_threading as _threading
 import multiprocessing
 import av
 
@@ -62,14 +58,8 @@ class AudioProcessor(object):
                     output_container.mux(output_audio_stream.encode(frame))
             output_container.close()
             print("processed '{}'".format(out_filename))
-        #ThreadFunc(task)
         ProcessFunc(task)
 
-
-def ThreadFunc(func):
-    t = _threading.Thread()
-    t.run = func
-    t.start()
 
 def ProcessFunc(task):
     p = multiprocessing.Process(target=task)
