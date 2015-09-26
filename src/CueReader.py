@@ -27,10 +27,10 @@ class CueReader(object):
                 f.seek(0)
             chardet = CharDetermine.CharDetermine(['utf8', 'gbk'])
             for line in f:
-                if not line.startswith(' '):
-                    self._processLine(chardet.processChar(line).strip())
-                else:
+                if line.startswith(' '):
                     self._processChunk(chardet.processChar(line).strip())
+                else:
+                    self._processLine(chardet.processChar(line).strip())
 
     def _processChunk(self, line):
         track_info = line.split()
