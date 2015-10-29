@@ -6,8 +6,9 @@ import Cuet
 
 
 if __name__ == '__main__':
-    cuet = Cuet.Cuet()
-    cuet.openCue(sys.argv[1])
-    for i in range(len(cuet._reader)):
-        cuet.cutMusicByFFmpeg(*cuet.getMusicInfoByTrackNumber(i + 1))
+    if (len(sys.argv)) == 2:
+        cuet = Cuet.Cuet()
+        cuet.openCue(sys.argv[1])
+        for i in range(len(cuet._reader)):
+            cuet.cutMusicByFFmpeg(*cuet.getMusicInfoByTrackNumber(i + 1))
 
