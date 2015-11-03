@@ -28,7 +28,7 @@ class Cuet(object):
 
         return None
 
-    def cutMusicByFFmpeg(self, filename, title, start_time, end_time):
+    def cutMusic(self, filename, title, start_time, end_time):
         ap = AudioProcessor.AudioProcessor()
         ap.open(filename)
         afdet = AFormatDetermine.AFormatDetermine(ap)
@@ -49,6 +49,6 @@ class Cuet(object):
 if __name__ == '__main__':
     cuet = Cuet()
     cuet.openCue(sys.argv[1])
-    cuet.cutMusicByFFmpeg(*cuet.getMusicInfoByTrackNumber(1))
+    cuet.cutMusic(*cuet.getMusicInfoByTrackNumber(1))
     print('finish.')
 
