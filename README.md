@@ -22,11 +22,3 @@ CUET
     brew install ffmpeg pkg-config
     pip install av
     ```
-
-### INSTALL
-
-```
-on MAC or Linux
-
-git clone https://github.com/littlekey/cuet && alias cuet=`pwd`/cuet/src/main.py
-```
