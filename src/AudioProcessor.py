@@ -6,6 +6,7 @@ import multiprocessing
 import av
 import AFormatDetermine
 import Time
+from Utils import Utils
 
 
 class AudioProcessor(object):
@@ -44,7 +45,7 @@ class AudioProcessor(object):
         self._overwrite = True
 
     def process(self, out_filename):
-        out_filename = out_filename.replace(os.sep, ' - ')
+        Utils.RecurMkdir(os.path.dirname(out_filename))
         if not self._media_container or (not self._overwrite and os.path.exists(out_filename)):
             return
         output_container = av.open(out_filename, 'w')
