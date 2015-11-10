@@ -43,6 +43,6 @@ class ID3(object):
 
 if __name__ == '__main__':
     id3 = ID3('/Users/littlekey/Downloads/Friendship - 冈崎律子.mp3')
-    print('support modify id3? {}'.format(ID3.isSupport() and 'yes' or 'no'))
+    print('support modify id3? {}'.format(id3.isSupport() and 'yes' or 'no'))
     print(id3['artist'])
 
