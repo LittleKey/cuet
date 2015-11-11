@@ -17,8 +17,7 @@ class Cuet(object):
     def openCue(self, filename):
         self._reader.parse(filename)
 
-    def getMusicInfoByTrackNumber(self, index):
-        index -= 1
+    def getMusicInfoByTrackIndex(self, index):
         if len(self._reader) > index and index >= 0:
             filename = self._reader.getFilename()
             title = self._cuter.getTitle(index)
