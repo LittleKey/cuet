@@ -46,9 +46,13 @@ class Cuet(object):
         else:
             ap.process(output_filename)
 
+    def getTrackAmount(self):
+        return len(self._reader)
+
 if __name__ == '__main__':
     cuet = Cuet()
     cuet.openCue(sys.argv[1])
     cuet.cutMusic(*cuet.getMusicInfoByTrackNumber(1))
+    print('tracks amount: {}'.format(cuet.getTrackAmount()))
     print('finish.')
 
