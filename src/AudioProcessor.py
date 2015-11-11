@@ -3,7 +3,10 @@
 
 import os
 import multiprocessing
-import av
+try:
+    import av
+except ImportError:
+    av = None
 import AFormatDetermine
 import Time
 from Utils import Utils
