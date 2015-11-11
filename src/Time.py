@@ -3,8 +3,7 @@
 
 class Time(object):
 
-    def __init__(self, hour=0, minute=0, sec=0, micro=0):
-        self._hour = hour
+    def __init__(self, minute=0, sec=0, micro=0):
         self._minute = minute
         self._sec = sec
         self._micro = micro
@@ -42,5 +41,5 @@ class Time(object):
             raise ValueError("no support compare with '{}'".format(other))
 
     def __repr__(self):
-        return '%02d:%02d:%02d:%03d' % (self._hour, self._minute, self._sec, self._micro)
+        return '%02d:%02d:%03d' % (self._minute, self._sec, self._micro)
 
