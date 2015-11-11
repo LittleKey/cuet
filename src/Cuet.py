@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import sys
+import os
 import CueCuter
 import CueReader
 import AFormatDetermine
@@ -13,6 +14,7 @@ class Cuet(object):
     def __init__(self):
         self._reader = CueReader.CueReader()
         self._cuter = CueCuter.CueCuter(self._reader)
+        self._out_dirname = os.path.curdir
 
     def openCue(self, filename):
         self._reader.parse(filename)
@@ -39,7 +41,8 @@ class Cuet(object):
         ap.setEndTime(end_time)
         ap.overwrite()
 
-        output_filename = '{title}{extname}'.format(title=title, extname=extname)
+        output_filename = os.path.join(self._out_dirname,
+                '{title}{extname}'.format(title=title, extname=extname))
         if ap.getName().endswith('.ape'):
             ap.processByFFmpeg(output_filename)
         else:
@@ -48,10 +51,14 @@ class Cuet(object):
     def getTrackAmount(self):
         return len(self._reader)
 
+    def setOutDir(self, dirname):
+        if os.path.isdir(dirname):
+            self._out_dirname = dirname
+
 if __name__ == '__main__':
     cuet = Cuet()
     cuet.openCue(sys.argv[1])
-    cuet.cutMusic(*cuet.getMusicInfoByTrackNumber(1))
+    cuet.cutMusic(*cuet.getMusicInfoByTrackIndex(0))
     print('tracks amount: {}'.format(cuet.getTrackAmount()))
     print('finish.')
 

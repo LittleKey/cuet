@@ -5,7 +5,7 @@ CUET
 
 ### USAGE
 
-`./main cue_filename.cue`
+`./main cue_filename.cue [out_dir]`
 
 裁剪音频文件依赖[PyAV](https://github.com/mikeboers/PyAV)
 
