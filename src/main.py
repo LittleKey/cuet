@@ -13,7 +13,7 @@ if __name__ == '__main__':
     if len(argv) == 2:
         cuet = Cuet.Cuet()
         cuet.setOutDir(out_dir)
-        cuet.openCue(sys.argv[1])
+        cuet.openCue(argv[1])
         for i in xrange(cuet.getTrackAmount()):
             cuet.cutMusic(*cuet.getMusicInfoByTrackIndex(i))
 
