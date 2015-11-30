@@ -21,7 +21,7 @@ class CueCuter(object):
                 try:
                     end_time = next_track.last_end_time
                 except AttributeError:
-                    end_time = next_track.start_time
+                    end_time = next_track.start_time - 1000
 
         return (start_time, end_time)
 

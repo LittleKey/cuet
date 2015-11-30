@@ -3,6 +3,15 @@
 
 class Time(object):
 
+    # time is MS
+    @staticmethod
+    def parse_from_ms(time):
+        if isinstance(time, (int,)) and time >= 0:
+            micro = time % 1000
+            src = (time / 1000) % 60
+            minute = time / (1000 * 60)
+            return Time(minute, src, micro)
+
     def __init__(self, minute=0, sec=0, micro=0):
         self._minute = minute
         self._sec = sec
@@ -39,6 +48,24 @@ class Time(object):
             return self.toMicroSec() - other
         else:
             raise ValueError("no support compare with '{}'".format(other))
+
+    def __sub__(self, right):
+        if isinstance(right, Time):
+            return Time.parse_from_ms(self.toMicroSec() - right.toMicroSec())
+        elif isinstance(right, int):
+            return Time.parse_from_ms(self.toMicroSec() - right)
+        else:
+            raise TypeError("unsupported operand type(s) for -: '{}' and '{}'".format(
+                type(self), type(right)))
+
+    def __add__(self, right):
+        if isinstance(right, Time):
+            return Time.parse_from_ms(self.toMicroSec() + right.toMicroSec())
+        elif isinstance(right, int):
+            return Time.parse_from_ms(self.toMicroSec() + right)
+        else:
+            raise TypeError("unsupported operand type(s) for +: '{}' and '{}'".format(
+                type(self), type(right)))
 
     def __repr__(self):
         return '%02d:%02d:%03d' % (self._minute, self._sec, self._micro)
