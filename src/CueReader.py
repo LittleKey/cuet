@@ -25,7 +25,7 @@ class CueReader(object):
             # remove utf-8 bom header
             if f.read(3) != '\xef\xbb\xbf':
                 f.seek(0)
-            chardet = CharDetermine.CharDetermine(['shift_jis', 'utf8', 'gbk'])
+            chardet = CharDetermine.CharDetermine(['utf8', 'shift_jis', 'gbk'])
             for line in f:
                 if line.startswith(' '):
                     self._processChunk(chardet.processChar(line).strip())
