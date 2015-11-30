@@ -25,7 +25,7 @@ class CueReader(object):
             # remove utf-8 bom header
             if f.read(3) != '\xef\xbb\xbf':
                 f.seek(0)
-            chardet = CharDetermine.CharDetermine(['utf8', 'gbk'])
+            chardet = CharDetermine.CharDetermine(['shift_jis', 'utf8', 'gbk'])
             for line in f:
                 if line.startswith(' '):
                     self._processChunk(chardet.processChar(line).strip())
@@ -56,7 +56,7 @@ class CueReader(object):
             self._data.setTitle(' '.join(line.split()[1:]))
         elif line.startswith('FILE'):
             file_info = ' '.join(line.split()[1:])
-            match = re.compile(r'^"?(.*?)"?\s*([a-zA-Z]*)$')
+            match = re.compile(r'^"?(.*?)"?\s*([a-zA-Z\s]*)$')
             rlt = match.match(file_info)
             if rlt:
                 self._data.setFile(*rlt.groups())
