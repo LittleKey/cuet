@@ -3,9 +3,9 @@
 
 class Time(object):
 
-    # time is MS
     @staticmethod
     def parse_from_ms(time):
+        """@param time must be int and unit is microsecond"""
         if isinstance(time, (int,)) and time >= 0:
             micro = time % 1000
             src = (time / 1000) % 60
