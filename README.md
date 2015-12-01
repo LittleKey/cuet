@@ -13,7 +13,7 @@ CUET
 
 *参考`Cuet.py`*
 
-*trace 数从0开始计算*
+*p.s: trace number从0开始计算*
 
 ### REQUIREMENTS
 
